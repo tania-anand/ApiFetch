@@ -58,7 +58,7 @@ public class ViewActivity extends AppCompatActivity {
         if(arrayList.size()>10)
             valLength = 10;
         for(int i=0;i<valLength;i++){
-            xVals.add(arrayList.get(i).getName());
+            xVals.add(arrayList.get(i).getName().split(" ")[0]);
             yvalues.add(new BarEntry(i,(float)arrayList.get(i).getSalary()));
         }
 
@@ -90,8 +90,6 @@ public class ViewActivity extends AppCompatActivity {
 
         BarDataSet dataSet = new BarDataSet(yvalues,"");
         BarData data = new BarData(dataSet);
-        data.setValueTextSize(4f);
-        data.setBarWidth(1.0f);
 
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         data.setValueTextColor(Color.WHITE);

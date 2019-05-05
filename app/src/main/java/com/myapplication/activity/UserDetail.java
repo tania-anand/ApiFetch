@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -28,7 +31,12 @@ import com.myapplication.R;
 import com.myapplication.model.User;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +59,9 @@ public class UserDetail extends AppCompatActivity {
 
     @BindView(R.id.txt_salary)
     TextView mTxtSalary;
+
+    @BindView(R.id.upload_image_text)
+    TextView txtUploadImage;
 
     User mUser;
 
@@ -156,12 +167,33 @@ public class UserDetail extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAMERA_REQUESTCODE && resultCode == RESULT_OK) {
+            txtUploadImage.setVisibility(View.GONE);
             Bundle extras = data.getExtras();
             Bitmap bitmap = (Bitmap) extras.get("data");
-            bitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, true);
-            mImage.setImageBitmap(bitmap);
+            mImage.setImageBitmap(timestampItAndSave(bitmap));
         }
     }
+
+
+
+    private Bitmap timestampItAndSave(Bitmap toEdit){
+        Bitmap dest = Bitmap.createScaledBitmap(toEdit, mImage.getWidth(), mImage.getHeight(), true);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        String dateTime = sdf.format(Calendar.getInstance().getTime()); // reading local time in the system
+
+        Canvas cs = new Canvas(dest);
+        Paint tPaint = new Paint();
+        tPaint.setTextSize(20);
+        tPaint.setColor(Color.RED);
+        tPaint.setStyle(Paint.Style.FILL);
+        float height = tPaint.measureText("yY");
+        cs.drawText(dateTime, 20f, height+15f, tPaint);
+        return dest;
+    }
+
+
+
 
 
 }
